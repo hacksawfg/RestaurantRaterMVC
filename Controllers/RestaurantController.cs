@@ -19,7 +19,7 @@ namespace RestaurantRaterMVC.Controllers
         public async Task<IActionResult> Index() 
         {
             List<RestaurantListItem> restaurants = await _context.Restaurants
-            .Include(r => r.Ratings)
+            .Include(r => r.Rating)
             .Select(r => new RestaurantListItem()
             {
                 Id = r.Id,
@@ -30,6 +30,25 @@ namespace RestaurantRaterMVC.Controllers
             return View(restaurants);
         }
 
+        [ActionName("Details")]
+        public async Task<IActionResult> Restaurant(int id)
+        {
+            Restaurant restaurant = await _context.Restaurants
+                .Include(r => r.Rating)
+                .FirstOrDefaultAsync(r => r.Id == id);
+            
+            if (restaurant == null)
+                return RedirectToAction(nameof(Index));
+            RestaurantDetail restaurantDetail = new RestaurantDetail()
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                Location = restaurant.Location,
+                Score = restaurant.Score
+            };
+            return View(restaurantDetail);
+        }
+        
         public async Task<IActionResult> Create() 
         {
             return View();

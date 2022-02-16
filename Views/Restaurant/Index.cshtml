@@ -26,12 +26,12 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayNameFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
                     @if (item.Score > 0)
                     {
-                    @Html.DisplayNameFor(modelItem => modelItem.Score)
+                    @Html.DisplayFor(modelItem => item.Score)
                     }
                     else{
                         <span>No Ratings Yet</span>

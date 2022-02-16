@@ -21,9 +21,9 @@ namespace RestaurantRaterMVC.Data
         {
             get
             {
-                return Ratings.Count > 0 ? Ratings.Select(r => r.Score).Sum() / Ratings.Count : 0;
+                return Rating.Count > 0 ? Rating.Select(r => r.Score).Sum() / Rating.Count : 0;
             }
         }
-        public virtual List<Rating> Ratings { get; set; } = new List<Rating>();
+        public virtual List<Rating> Rating { get; set; } = new List<Rating>();
     }
 }
