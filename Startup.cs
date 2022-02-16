@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RestaurantRaterMVC.Data;
 
 namespace RestaurantRaterMVC
 {
@@ -23,7 +25,16 @@ namespace RestaurantRaterMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // IConfigurationBuilder cBuilder = new ConfigurationBuilder().AddUserSecrets<Startup>();
+            // var config = cBuilder.Build();
+            services.AddDbContext<RestaurantDbContext>(options =>
+                  options.UseSqlServer(
+                      Configuration.GetConnectionString("DefaultConnection")
+                  )
+                );
+
             services.AddControllersWithViews();
+            services.AddHttpsRedirection(options => options.HttpsPort = 443);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
