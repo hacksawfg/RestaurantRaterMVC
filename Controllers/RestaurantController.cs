@@ -16,7 +16,7 @@ namespace RestaurantRaterMVC.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Index() 
+        public async Task<IActionResult> Index()
         {
             List<RestaurantListItem> restaurants = await _context.Restaurants
             .Include(r => r.Rating)
@@ -36,7 +36,7 @@ namespace RestaurantRaterMVC.Controllers
             Restaurant restaurant = await _context.Restaurants
                 .Include(r => r.Rating)
                 .FirstOrDefaultAsync(r => r.Id == id);
-            
+
             if (restaurant == null)
                 return RedirectToAction(nameof(Index));
             RestaurantDetail restaurantDetail = new RestaurantDetail()
@@ -48,8 +48,9 @@ namespace RestaurantRaterMVC.Controllers
             };
             return View(restaurantDetail);
         }
-        
-        public async Task<IActionResult> Create() 
+
+        // GET Method       
+        public async Task<IActionResult> Create()
         {
             return View();
         }
@@ -73,5 +74,68 @@ namespace RestaurantRaterMVC.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        // GET Method
+        public async Task<IActionResult> Edit(int id)
+        {
+            Restaurant restaurant = await _context.Restaurants.FindAsync(id);
+
+            if (restaurant is null)
+                return RedirectToAction(nameof(Index));
+            RestaurantEdit restaurantEdit = new RestaurantEdit()
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                Location = restaurant.Location
+            };
+            return View(restaurantEdit);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, RestaurantEdit model)
+        {
+            if (!ModelState.IsValid)
+                return View(ModelState);
+            Restaurant restaurant = await _context.Restaurants.FindAsync(id);
+
+            if (restaurant == null)
+                return RedirectToAction(nameof(Index));
+            restaurant.Name = model.Name;
+            restaurant.Location = model.Location;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = restaurant.Id });
+        }
+        // Get Method
+        public async Task<IActionResult> Delete(int id)
+        {
+            Restaurant restaurant = await _context.Restaurants.FindAsync(id);
+
+            if (restaurant is null)
+                return RedirectToAction(nameof(Index));
+
+            RestaurantDetail restaurantDetail = new RestaurantDetail()
+            {
+                Id = restaurant.Id,
+                Name = restaurant.Name,
+                Location = restaurant.Location
+            };
+            return View(restaurantDetail);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, RestaurantDetail model)
+        {
+            Restaurant restaurant = await _context.Restaurants.FindAsync(id);
+
+            if (restaurant is null)
+                return RedirectToAction(nameof(Index));
+            
+            _context.Restaurants.Remove(restaurant);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }
