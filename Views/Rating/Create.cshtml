@@ -1,0 +1,36 @@
+@model RestaurantRaterMVC.Models.Ratings.RatingCreate
+
+@{
+    string title = "Rate A Restaurant";
+    ViewData["Title"] = title;
+}
+
+<h1>@title</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div class="form-group">
+                <span asp-validation-for="RestaurantId" class="text-danger"></span>
+                <label asp-for="RestaurantId" class="control-label"></label>
+                @Html.DropDownListFor(r => r.RestaurantId, Model.RestaurantOptions)
+            </div>
+            <div class="form-group">
+                <span asp-validation-for="Score" class="text-danger"></span>
+                <label asp-for="Score" class="control-label"></label>
+                <input asp-for="Score" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Rate!" class="btn btn-primary" />
+            </div>
+        </form>
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
