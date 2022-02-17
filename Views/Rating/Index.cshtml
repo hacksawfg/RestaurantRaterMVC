@@ -27,6 +27,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Score)
             </td>
+            <td>
+                
+                @* @Html.ActionLink("Edit", "Edit", new {id = item.Id}) | *@
+                <a asp-controller="Rating" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
         </tr>
     }
 </table>

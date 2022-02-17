@@ -27,10 +27,11 @@ namespace RestaurantRaterMVC.Controllers
             IEnumerable<RatingListItem> ratings = await _context.Rating
                 .Select(r => new RatingListItem()
                 {
+                    Id = r.Id,
                     RestaurantName = r.Restaurant.Name,
                     Score = r.Score
                 }).ToListAsync();
-            
+
             return View(ratings);
         }
 
@@ -69,7 +70,7 @@ namespace RestaurantRaterMVC.Controllers
         {
             if (!ModelState.IsValid)
                 return View();
-            
+
             Rating rating = new Rating()
             {
                 RestaurantId = model.RestaurantId,
@@ -77,6 +78,38 @@ namespace RestaurantRaterMVC.Controllers
             };
 
             _context.Rating.Add(rating);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            Rating rating = await _context.Rating
+            .Include(rest => rest.Restaurant) 
+            .FirstOrDefaultAsync(rest => rest.Id == id);
+            
+            if (rating is null)
+                return RedirectToAction(nameof(Index));
+            
+            RatingListItem ratingDelete = new RatingListItem()
+            {
+                Id = rating.Id,
+                RestaurantName = rating.Restaurant.Name,
+                Score = rating.Score
+            };
+
+            return View(ratingDelete);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, RatingListItem model)
+        {
+            Rating rating = await _context.Rating.FindAsync(id);
+            if (rating is null)
+                return RedirectToAction(nameof(Index));
+            
+            _context.Rating.Remove(rating);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

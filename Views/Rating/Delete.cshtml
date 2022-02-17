@@ -1,0 +1,37 @@
+@model RestaurantRaterMVC.Models.Ratings.RatingListItem
+
+@{
+    string title = "Delete A Rating";
+    ViewData["Title"] = title;
+}
+
+<h1>@title</h1>
+<h4>Are you sure you want to delete @Model.Score?</h4>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.RestaurantName)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.RestaurantName)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Score)
+    </dt>
+    <dd class="col-sm-10">
+        @if (Model.Score > 0)
+        {
+        @Html.DisplayFor(model => model.Score)
+        }
+        else
+        {
+            <span>No Ratings Yet</span>
+        }
+    </dd>
+</dl>
+
+<form asp-action="Delete">
+    <input type="submit", value="Delete" class="btn btn-danger" />
+    <a asp-action="Index">Back to List</a>
+</form>
